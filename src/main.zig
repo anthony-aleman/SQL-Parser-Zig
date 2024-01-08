@@ -14,6 +14,46 @@ const std = @import("std");
 \\    - Column names without aliases
 \\   
 \\ Example Query: SELECT column1, column2 FROM table1 WHERE column1 = 'value';
+\\
+\\ Writing Grammar:
+\\  Query -> SELECT ColumnList FROM TableName WhereClause
+\\  ColumnList -> ColumnName ColumnListTail
+\\  ColumnListTail -> , ColumnName ColumnListTail | e
+\\  TableName -> identifier
+\\  WhereClause -> WHERE Condition | e
+\\  Condition -> ColumnName = Value
+\\  ColumnName -> identifier
+\\  Value -> string_literal
+\\
+
+const Symbols = enum {
+    // Terminals
+    SELECT, //  SELECT Keyword
+    FROM,   //  FROM Keyword
+    WHERE,  //  WHERE Keyword
+    IDENTIFIER, // table name, column name
+    STRING_LITERAL, // string literal
+    COMMA, // ,
+    EQUALS, // =
+    SEMICOLON, // ;
+    EPSILON, // e
+    EOF, // end of file
+    INVALID, // invalid token
+
+    // Non-Terminals
+    QUERY,
+    COLUMN_LIST,
+    COLUMN_LIST_TAIL,
+    TABLE_NAME,
+    WHERE_CLAUSE,
+    CONDITION,
+    COLUMN_NAME,
+    VALUE,
+
+}
+
+
+
 
 pub fn main() !void {
     // Prints to stderr (it's a shortcut based on `std.io.getStdErr()`)
